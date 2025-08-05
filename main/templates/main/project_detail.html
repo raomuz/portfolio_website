@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="project-detail-section py-5" style="padding-top: 100px !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h1 class="display-5 fw-bold">{{ project.title }}</h1>
+                <p class="text-muted">{{ project.short_description }}</p>
+            </div>
+        </div>
+        
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto">
+                <img src="{{ project.featured_image.url }}" alt="{{ project.title }}" class="img-fluid rounded-3 shadow">
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-8 mx-auto">
+                <div class="project-meta mb-5">
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="text-muted mb-2">Client</h6>
+                                    <p class="mb-0">{{ project.client|default:"Personal Project" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="text-muted mb-2">Technologies</h6>
+                                    <p class="mb-0">{{ project.technology }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body text-center">
+                                    <h6 class="text-muted mb-2">Date</h6>
+                                    <p class="mb-0">{{ project.date|date:"F Y" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-content mb-5">
+                    <h3 class="mb-4">Project Overview</h3>
+                    <div class="content-text">
+                        {{ project.full_description|linebreaks }}
+                    </div>
+                </div>
+                
+                {% if project.image_1 or project.image_2 or project.image_3 %}
+                <div class="project-gallery mb-5">
+                    <h3 class="mb-4">Project Gallery</h3>
+                    <div class="row g-3">
+                        {% if project.image_1 %}
+                        <div class="col-md-6">
+                            <img src="{{ project.image_1.url }}" alt="{{ project.title }} - Image 1" class="img-fluid rounded shadow-sm">
+                        </div>
+                        {% endif %}
+                        {% if project.image_2 %}
+                        <div class="col-md-6">
+                            <img src="{{ project.image_2.url }}" alt="{{ project.title }} - Image 2" class="img-fluid rounded shadow-sm">
+                        </div>
+                        {% endif %}
+                        {% if project.image_3 %}
+                        <div class="col-12">
+                            <img src="{{ project.image_3.url }}" alt="{{ project.title }} - Image 3" class="img-fluid rounded shadow-sm">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="project-links d-flex justify-content-center gap-3 mb-5">
+                    {% if project.project_url %}
+                    <a href="{{ project.project_url }}" target="_blank" class="btn btn-primary px-4 py-2">
+                        <i class="bi bi-eye-fill me-2"></i> Live Demo
+                    </a>
+                    {% endif %}
+                    {% if project.github_url %}
+                    <a href="{{ project.github_url }}" target="_blank" class="btn btn-dark px-4 py-2">
+                        <i class="bi bi-github me-2"></i> View Code
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        {% if related_projects %}
+        <div class="related-projects mt-5 pt-5 border-top">
+            <h3 class="text-center mb-5">Other Projects You Might Like</h3>
+            <div class="row g-4">
+                {% for project in related_projects %}
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm h-100">
+                        <img src="{{ project.featured_image.url }}" class="card-img-top" alt="{{ project.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text text-muted">{{ project.short_description }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0">
+                            <a href="{% url 'project_detail' project.pk %}" class="btn btn-sm btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

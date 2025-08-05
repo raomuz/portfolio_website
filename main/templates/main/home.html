@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section id="home" class="hero-section text-white py-5" style="padding-top: 80px !important;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Hi, I'm <span class="text-warning">{{ profile.name }}</span></h1>
+                <img src="{% static 'images/my_img2.png' %}" alt="Hero Image" class="img-fluid rounded-circle">
+                <h5>Email : raomuzammil985@gmail.com</h5>
+                <h5>WhatsApp : 0321-9635632</h5>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-light">Hire Me</a>
+                    <a href="{{ profile.cv.url }}" class="btn btn-outline-light" download>Download CV</a>
+                    <a href="#projects" class="btn btn-outline-light ">View Work</a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <p class="lead mb-4">{{ profile.bio }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Replace existing projects section with this -->
+<section id="projects" class="py-5">
+    <div class="container">
+        <div class="section-header text-center mb-5">
+            <h2>My Projects</h2>
+            <p class="text-muted">Here are some of my recent works</p>
+        </div>
+        <div class="row g-4">
+            {% for project in projects %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-img-top position-relative overflow-hidden">
+                        <img src="{{ project.featured_image.url }}" class="img-fluid" alt="{{ project.title }}">
+                        <div class="card-overlay">
+                            <a href="{% url 'project_detail' project.pk %}" class="btn btn-primary btn-sm stretched-link">View Project</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text text-muted">{{ project.short_description }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge">{{ project.technology }}</span>
+                            <small class="text-muted">{{ project.date|date:"M Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% if projects|length > 6 %}
+        <div class="text-center mt-5">
+            <a href="#" class="btn btn-outline-primary">View All Projects</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section id="skills" class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">My Skills</h2>
+        <div class="row">
+            {% for skill in skills %}
+            <div class="col-md-6 mb-4">
+                <div class="skill-item">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>{{ skill.name }}</span>
+                        <span>{{ skill.proficiency }}%</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar bg-red-gradient" role="progressbar" 
+                             style="width: {{ skill.proficiency }}%" 
+                             aria-valuenow="{{ skill.proficiency }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="contact" class="container my-5">
+    <div class="row">
+        <div class="col-md-6 mx-auto">
+            <h2 class="mb-4">Contact Me</h2>
+            
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
