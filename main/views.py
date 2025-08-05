@@ -15,27 +15,26 @@ def home(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             contact = form.save()
-            
+
             # Send email to admin
             send_mail(
-                f"New Contact: {contact.subject}",
-                f"From: {contact.name} <{contact.email}>\n\n{contact.message}",
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.EMAIL_HOST_USER],
+                subject=f"New Contact: {contact.subject}",
+                message=f"From: {contact.name} <{contact.email}>\n\n{contact.message}",
+                from_email='Rao Muzammil',
+                recipient_list=[settings.EMAIL_HOST_USER],
                 fail_silently=False,
             )
-            
+
             # Send confirmation to user
             send_mail(
-                "Thank you for contacting us",
-                f"Hi {contact.name},\n\nWe've received your message and will get back to you soon.\n\nYour message:\n{contact.message}",
-                settings.DEFAULT_FROM_EMAIL,
-                [contact.email],
+                subject="Thank you for contacting us",
+                message=f"Hi,\n\nWe've received your message and will get back to you soon.\n\nYour message:\n{contact.message}",
+                from_email='Rao Muzammil',
+                recipient_list=[contact.email],
                 fail_silently=False,
             )
-            
+
             messages.success(request, 'Your message has been sent successfully!')
-            return redirect('home')
     else:
         form = ContactForm()
     
